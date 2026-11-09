@@ -1,1 +1,12 @@
 *.pdf
+
+# Nunca subir muestras de malware ni proyectos de Ghidra
+*.exe
+*.bin
+*.dll
+*.zip
+*.gpr
+*.rep/
+samples/
+sample/
+.mb_key
