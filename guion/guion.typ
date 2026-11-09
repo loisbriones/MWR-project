@@ -138,10 +138,11 @@ Este es el *framing honesto* que pide un trabajo de calidad y que nos cubre ante
 = Slide 8 — The LLM-augmented stack (diagrama)
 
 #hablar[
-"La clave es que el LLM no se usa copiando y pegando: se *conecta* a la herramienta. El diagrama muestra el flujo: del *binario* a *Ghidra*, y a través de un *puente MCP* el modelo accede a la API de Ghidra. El ejemplo más conocido es *GhidraMCP*, de LaurieWired, que expone funciones como listar y decompilar funciones, renombrar o mirar referencias cruzadas. Así el agente *itera* —decompila, explica, renombra, vuelve a leer, propone parche— siempre con un *humano en el bucle* que acepta o rechaza cada cambio."
+"La clave es que el LLM no se usa copiando y pegando: se *conecta* a la herramienta. El diagrama muestra el flujo: del *binario* a *Ghidra*, y a través de un *puente MCP* el modelo accede a la API de Ghidra. El ejemplo más conocido es *GhidraMCP*, de LaurieWired, que expone funciones como listar y decompilar funciones, renombrar o mirar referencias cruzadas. Aunque también existen puentes para herramientas *dinámicas* (depuradores o logs de sandbox), nuestra presentación —y la mayor parte de la literatura actual— se centra en el bucle *estático* de decompilación y parcheo, dejando la ejecución dinámica para *verificar*. Así el agente *itera* —decompila, explica, renombra, vuelve a leer, propone parche— siempre con un *humano en el bucle*."
 ]
 #profundizar[
 - *MCP (Model Context Protocol)*: protocolo estándar para dar herramientas/datos a un LLM. *GhidraMCP* (#link("https://github.com/LaurieWired/GhidraMCP")[github.com/LaurieWired/GhidraMCP]) = plugin de Ghidra + servidor puente; permite a Claude/Cline/etc. pedir decompilaciones y renombrar automáticamente. Hay alternativas (p. ej. `suidpit/ghidra-mcp`).
+- *¿Por qué estático aquí y qué pasa con el dinámico?* Un LLM no está limitado a análisis estático: también hay puentes MCP para depuradores (GDB/x64dbg) o para analizar trazas de sandbox. Sin embargo, el grueso de los trabajos de desensamblado/remediación (y el encuadre de esta charla) trabaja sobre el decompilador estático (Ghidra) y usa la parte dinámica (ejecución/tests/sandbox) como paso de verificación.
 - La idea de "iterar con humano en el bucle" es lo que diferencia el flujo moderno del simple "pega el código en un chat". Es también lo que hará la demo (Acto A).
 ]
 
@@ -154,7 +155,7 @@ Este es el *framing honesto* que pide un trabajo de calidad y que nos cubre ante
 = Slide 10 — Two lanes, same destination
 
 #hablar[
-"A la izquierda, el flujo *manual*: cargar el binario, mapear funciones a mano, leer el pseudocódigo línea a línea, deducir la intención, reproducir el comportamiento en sandbox y finalmente localizar el fallo y diseñar la mitigación. Horas o días, y la profundidad depende de la pericia del experto. A la derecha, el flujo *aumentado*: el agente decompila y resume funciones en bloque, el LLM explica y renombra, el analista dirige con preguntas, la IA redacta IOCs, reglas YARA o un parche… y el analista *verifica contra el binario*. El triaje baja a minutos, pero el paso de verificación sigue siendo obligatorio."
+"A la izquierda, el flujo *manual*: cargar el binario, mapear funciones a mano, leer el pseudocódigo línea a línea, deducir la intención, reproducir el comportamiento en sandbox y finalmente localizar el fallo y diseñar la mitigación. Horas o días, y la profundidad depende de la pericia del experto. A la derecha, el flujo *aumentado*: el agente decompila (vía Ghidra) y resume funciones en bloque, el LLM explica y renombra, el analista dirige con preguntas, la IA redacta IOCs, reglas YARA o un parche… y el analista *verifica contra el binario*. El triaje baja a minutos, pero el paso de verificación sigue siendo obligatorio."
 ]
 #profundizar[
 El mensaje de este par de carriles: la IA *no elimina* pasos críticos, los *reordena*. El esfuerzo humano se desplaza de *leer* a *verificar*. Útil para responder "¿entonces sobra el analista?": no, cambia su rol hacia validación y criterio.
@@ -178,7 +179,7 @@ Las filas están pensadas para que cada una tenga un "ganador" distinto → evit
 = Slide 13 — Speed & comprehension
 
 #hablar[
-"Sobre velocidad y comprensión, un estudio reciente con 48 participantes haciendo ingeniería inversa (NDSS 2026) encontró que la comprensión de los *novatos* mejoró alrededor de un *98%*, y que las funciones que implementaban *algoritmos conocidos* se triaban hasta *2,4 veces más rápido*. Pero —y es importante— los *expertos* ganaron poco, y algunas respuestas incluían *alucinaciones dañinas*. O sea: la mayor ganancia es *bajar la barrera de entrada* y acelerar el *primer vistazo*, no reemplazar el juicio experto."
+"Sobre velocidad y comprensión, el estudio *Decompiling the Synergy* de Eurecom, con 48 participantes haciendo ingeniería inversa (NDSS 2026), encontró que la comprensión de los *novatos* mejoró alrededor de un *98%*, y que las funciones que implementaban *algoritmos conocidos* se triaban hasta *2,4 veces más rápido*. Pero —y es importante— los *expertos* ganaron poco, y algunas respuestas incluían *alucinaciones dañinas*. O sea: la mayor ganancia es *bajar la barrera de entrada* y acelerar el *primer vistazo*, no reemplazar el juicio experto."
 ]
 #profundizar[
 Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in Software Reverse Engineering" (Eurecom, NDSS 2026) — #link("https://www.eurecom.edu/en/node/4899620")[ficha]. Cifras: comprensión de novatos +~98%; hasta 2,4× más rápido en funciones con algoritmos conocidos; experts con poca mejora y presencia de hallucinations. Es el estudio con *sujetos humanos* más riguroso de los que manejamos → cítalo como el dato fuerte. Matiz honesto: los números dependen de la muestra y tareas concretas.
@@ -187,23 +188,27 @@ Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in 
 = Slide 14 — Remediation & patching
 
 #hablar[
-"En *remediación y parcheo* la foto es más dura. El benchmark *PatchEval*, con 1.000 CVEs reales, encontró que el mejor modelo o agente solo arreglaba alrededor del *23%* de las vulnerabilidades. Eso sí, los modelos son *complementarios*: entre varios, se cubrían bastantes más. Y estudios de arquitecturas de parcheo comparan flujos fijos frente a agentes, intercambiando *precisión contra tiempo y coste en tokens*. La conclusión: la IA *propone* el parche; el humano y la batería de tests *disponen*."
+"En *remediación y parcheo* la foto es más dura. El benchmark *PatchEval*, con 1.000 CVEs reales (230 evaluados en sandbox de ejecución), encontró que el mejor modelo individual solo arreglaba alrededor del *23%* (53 de 230). Eso sí, distintos modelos resuelven fallos distintos: combinándolos se sube al *43%* (98 de 230). Además, los estudios de arquitecturas de parcheo comparan pipelines fijos frente a agentes, intercambiando *precisión contra tiempo y coste en tokens*. En conclusión: la IA *propone* el parche; el humano y la batería de tests *lo validan*."
 ]
 #profundizar[
-- *PatchEval* (arXiv 2511.11019, nov 2025) — #link("https://arxiv.org/abs/2511.11019")[enlace]. 1.000 CVEs (2015–2025), 65 CWE; mejor resultado ~*23,0%* (53/230 en el subconjunto con sandbox); fuerte *complementariedad* (98 bugs resueltos por al menos un modelo). No mide tiempo de reloj.
-- *Estudio de arquitecturas de parcheo* (arXiv 2603.01257, 2026): compara workflow fijo / un agente / multi-agente / agentes de código generales; analiza correctitud, *tiempo de ejecución* y *tokens*. Hallazgo útil: los workflows fijos son eficientes pero frágiles; multi-agente = más overhead; los agentes de código generales rinden mejor en conjunto.
+- *PatchEval* (arXiv 2511.11019, nov 2025) — #link("https://arxiv.org/abs/2511.11019")[enlace]. 1.000 CVEs (2015–2025), 65 CWE. En el subconjunto de 230 CVEs con sandbox ejecutable, el mejor modelo individual logra ~*23,0%* (53/230); fuerte *complementariedad* entre modelos: como distintos modelos arreglan bugs distintos, al combinarlos al menos un modelo resuelve *98/230 (~42,6%)*. No mide tiempo de reloj.
+- *Estudio de arquitecturas de parcheo* (arXiv 2603.01257, 2026) — #link("https://arxiv.org/abs/2603.01257")[enlace]: compara cuatro modalidades analizando correctitud, *tiempo de ejecución* y *tokens*:
+  + *Workflow fijo (pipeline)*: secuencia rígida de pasos predefinidos por código (p. ej., localizar → generar parche → compilar/testear en un número fijo de pasos), sin que el LLM decida el flujo; es eficiente y barato en tokens, pero frágil si el paso inicial falla.
+  + *Un agente (single-agent)*: un único LLM en bucle autónomo (*tool-use / ReAct*) que decide qué herramientas invocar (leer código, editar, compilar, pasar tests) e itera según los errores obtenidos.
+  + *Multi-agente (multi-agent)*: varios agentes con roles especializados (p. ej., localizador/analista, desarrollador del parche, verificador/crítico) que se comunican entre sí; añade bastante *overhead* en tiempo y tokens sin mejorar siempre a un solo agente.
+  + *Agentes de código generales*: agentes maduros de ingeniería de software (como SWE-agent, OpenHands o Claude Code) con herramientas generales sobre el repositorio; rinden mejor en conjunto.
 - Si te preguntan por "tiempos de generar parches": no hay un estándar de wall-clock citable con confianza; por eso la *demo* aporta nuestra propia medición cronometrada.
 ]
 
 = Slide 15 — The hallucination problem
 
 #hablar[
-"El gran problema son las *alucinaciones*. Tres formas típicas: *lógica inventada* —explicaciones plausibles pero falsas—; *renombrados engañosos* —una función llamada `decrypt_payload` que no descifra nada—; y *baja recompilabilidad*: el trabajo DecLLM subió el código decompilado que *vuelve a compilar* del 9% al 25%, es decir, la mayoría *ni siquiera reconstruye*. ¿La mitigación? *Verificar contra la verdad del binario*: recompilar, comparar comportamiento, ejecución simbólica, tests. Y esta es exactamente la razón por la que la IA sigue siendo poco fiable para *clasificar malware* automáticamente."
+"El gran problema son las *alucinaciones*. Tres formas típicas: *lógica inventada* —explicaciones plausibles pero falsas—; *renombrados engañosos* —una función llamada `decrypt_payload` que no descifra nada—; y *baja recompilabilidad*: el trabajo DecLLM subió el código decompilado que *vuelve a compilar* del 9% al 25%, es decir, la mayoría *ni siquiera reconstruye*. Estos fallos explican por qué la IA por sí sola es poco fiable para *clasificar malware* automáticamente: el modelo solo lee texto estático, no ejecuta el binario, por lo que la ofuscación y las alucinaciones semánticas llevan a etiquetas erróneas. ¿La mitigación? *Verificar contra la verdad del binario*: recompilar, comparar comportamiento, ejecución simbólica y tests."
 ]
 #profundizar[
 - *DecLLM* (ISSTA 2025) — #link("https://daoyuan14.github.io/papers/ISSTA25_DecLLM.pdf")[PDF]: recompilabilidad *9% → 25%* con contexto completo; nombra fallos como *attention degradation*, *shortcuts* y *hallucination*.
 - *D-LiFT / D-Score* (arXiv 2506.10125) — #link("https://www.alphaxiv.org/abs/2506.10125")[enlace]: los pipelines previos introducen errores sintácticos/semánticos nuevos; proponen *puntuar* precisión y legibilidad usando el compilador (sintaxis) y ejecución simbólica (semántica).
-- Conexión con clasificación de malware: si el modelo alucina sobre lo que hace el código, *etiquetarlo* (familia/benigno-malicioso) hereda ese error. Por eso la verificación contra el binario es innegociable. Este es el punto que más conecta con el temario de la asignatura.
+- Conexión con clasificación de malware: ¿por qué falla la clasificación automática con LLM? Porque el modelo solo ve código estático (no ejecuta el binario) y el malware emplea ofuscación; si el modelo alucina sobre lo que hace el código, *etiquetarlo* (familia/benigno-malicioso) hereda ese error. Por eso la verificación contra el binario es innegociable. Este es el punto que más conecta con el temario de la asignatura.
 ]
 
 // =================== SECCIÓN 5 ===================
@@ -241,19 +246,19 @@ Cumple el ítem "Demo (real/vídeo)" del profesor. Ten el vídeo *embebido o en 
 = Slide 20 — Takeaways
 
 #hablar[
-"Tres mensajes. Uno: los LLM *aceleran* la ingeniería inversa y *redactan* borradores de remediación, sobre todo en *triaje* y para *no-expertos*. Dos: *no* sustituyen al analista —el éxito parcheando es modesto, en torno al 23%, y las alucinaciones son reales. Tres: lo que hace que funcione es *mantener un humano en el bucle* y *verificar cada salida contra el binario*. Y esa misma razón explica por qué la IA todavía *falla al clasificar malware* de forma fiable."
+"Tres mensajes. Uno: los LLM *aceleran* la ingeniería inversa y *redactan* borradores de remediación, sobre todo en *triaje* y para *no-expertos*. Dos: *no* sustituyen al analista —el éxito parcheando es modesto, en torno al 23%, y las alucinaciones son reales. Tres: lo que hace que funcione es *mantener un humano en el bucle* y *verificar cada salida contra el binario*. Y esto explica por qué la IA estática todavía *falla al clasificar malware* de forma fiable: al no ver el comportamiento en ejecución, la ofuscación y las alucinaciones llevan a etiquetas equivocadas sin esa verificación."
 ]
 #profundizar[
-Cierre que amarra el hilo conductor (acelerador + verificación). Deja la última frase conectando con la clasificación de malware porque es el punto de la asignatura y da pie a preguntas.
+Cierre que amarra el hilo conductor (acelerador + verificación). Deja la última frase explicando explícitamente *por qué* falla la clasificación de malware (análisis estático sin ejecución + alucinaciones) porque conecta con el temario de la asignatura y da pie a preguntas.
 ]
 
-= Slide 21 — Credits & contributions
+= Slide 21 — References
 
 #hablar[
-"Estos son los créditos y el reparto de trabajo del grupo." (Lee brevemente quién hizo qué.)
+"Aquí tenéis las referencias principales de los estudios, benchmarks y herramientas que hemos citado durante la presentación."
 ]
 #profundizar[
-El profesor *exige* créditos y contribución por miembro (puede haber nota distinta por persona). Rellenad la tabla con los nombres y ajustad el reparto a lo que realmente hizo cada uno. Mencionad herramientas (Typst/Touying) y que las fuentes están en este guion.
+Diapositiva de fuentes y referencias bibliográficas para respaldar todas las cifras de la charla. El listado completo y comentado con enlaces está en la sección final de este guion.
 ]
 
 = Slide 22 — Thank you / Q&A
