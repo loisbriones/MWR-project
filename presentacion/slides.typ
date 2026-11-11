@@ -14,10 +14,10 @@
   config-common(new-section-slide-fn: none),
   config-info(
     title: [Generative AI-Assisted Malware Disassembly and Remediation],
-    subtitle: [How LLMs accelerate reverse engineering and patching — and where they still fail],
-    author: [Author 1 · Author 2 · Author 3],
-    date: datetime(year: 2026, month: 11, day: 8),
-    institution: [M.Sc. in Cybersecurity — Malware Analysis],
+    subtitle: [How LLMs accelerate reverse engineering and patching (and where they still fail)],
+    author: [Lois Briones · David Esperante · Héctor Aldao],
+    date: datetime(year: 2026, month: 11, day: 16),
+    institution: [MUniCS - Malware Analysis],
   ),
 )
 
@@ -77,12 +77,13 @@
 #slide(title: "Reverse engineering is slow, scarce and expensive")[
   #set text(size: 18pt)
   - Malware triage and patching are *bottlenecked by human experts*: disassembly, decompilation and dynamic analysis take *hours to days* per sample.
-  - Volume keeps growing: *hundreds of thousands* of new samples per day; a large *backlog of unpatched CVEs*.
+  - Volume keeps growing: *hundreds of thousands* of new samples per day, wich make a large *backlog of unpatched CVEs*.
   - Skills are rare: reading x86/ARM assembly and noisy decompiler pseudo-code is hard and error-prone.
 
   #v(0.5em)
   #block(fill: m-dark, inset: 10pt, radius: 4pt, width: 100%,
-    text(fill: white)[*The question:* can generative AI shrink the time-to-understanding and time-to-patch — without lying to us?])
+    //text(fill: white)[*The question:* can generative AI shrink the time-to-understanding and time-to-patch (without lying to us)?])
+    text(fill: white)[Can generative AI shrink the time-to-understanding and time-to-patch (without lying to us)?])
 ]
 
 #slide(title: "The promise of LLMs in this workflow")[
@@ -93,7 +94,7 @@
   - *Hypothesize* the exploited bug and *draft* a candidate mitigation or patch.
 
   #v(0.6em)
-  #alert[An LLM is an *accelerator and co-pilot*, *not* an autonomous replacement for the analyst. Every output must be *verified against the binary*.]
+  An LLM is an *accelerator and co-pilot*, *not* an autonomous replacement for the analyst. Every output must be *verified against the binary*.
 ]
 
 // ========================= 2. TOOLCHAIN =========================
@@ -120,7 +121,7 @@
     ],
   )
   #v(0.4em)
-  #block(fill: m-light, inset: 8pt, radius: 4pt, width: 100%, text(size: 15pt)[*Pseudo-code ≠ source code.* The decompiler guesses types and control flow; this is exactly the noisy input we ask an LLM to interpret.])
+  #block(fill: m-light, inset: 8pt, radius: 4pt, width: 100%, text(size: 15pt)[*Pseudo-code $eq.not$ source code.* The decompiler guesses types and control flow, which is exactly the noisy input we ask an LLM to interpret.])
 ]
 
 #slide(title: "The LLM-augmented stack")[
@@ -132,7 +133,7 @@
   ]
   #v(0.5em)
   - *MCP (Model Context Protocol)* bridges, e.g. *GhidraMCP* (LaurieWired), expose Ghidra's API (list/decompile functions, rename, cross-refs) to an LLM agent.
-  - *Static vs. dynamic:* bridges also exist for debuggers/sandboxes, but our focus (and most tooling) is *static decompilation & patching* — using dynamic runs to *verify*.
+  - *Static vs. dynamic:* bridges also exist for debuggers/sandboxes, but our focus (and most tooling) is *static decompilation & patching* (using dynamic runs to *verify*).
   - The agent *iterates* (decompile → explain → rename → re-read → propose patch) with a *human in the loop*.
 ]
 
@@ -152,8 +153,8 @@
       + Read assembly / pseudo-code line by line.
       + Guess intent, rename, take notes.
       + Reproduce behaviour in a sandbox.
-      + Locate the bug; design a mitigation.
-      #v(0.3em) _Hours–days; depth depends on expert skill._
+      + Locate the bug, design a mitigation.
+      #v(0.3em) _Hours-days, depth depends on expert skill._
     ],
     block(fill: m-accent.lighten(78%), inset: 10pt, radius: 4pt, width: 100%)[
       *AI-augmented*
@@ -162,12 +163,12 @@
       + Analyst steers questions ("what triggers this?").
       + LLM drafts IOCs / YARA / patch.
       + *Analyst verifies* against the binary.
-      #v(0.3em) _Minutes for triage; verification still required._
+      #v(0.3em) _Minutes for triage, verification still required._
     ],
   )
 ]
 
-#slide(title: "Where the AI lane helps — and where it doesn't")[
+#slide(title: "Where the AI lane helps, and where it doesn't")[
   #set text(size: 15pt)
   #table(columns: (1.4fr, 1fr, 1fr), align: (left, center, center), inset: 7pt,
     stroke: 0.5pt + m-gray,
@@ -189,21 +190,22 @@
   #agenda(current: 4)
 ]
 
-#slide(title: "Speed & comprehension — what studies show")[
+#slide(title: "Speed & comprehension: what studies show")[
   #set text(size: 16pt)
-  - *DHuman–LLM teaming study* (Eurecom, NDSS 2026, 48 participants): novices' comprehension rose by *~98%*; functions implementing *known algorithms* were triaged up to *2.4× faster*.
+  - *DHuman-LLM teaming study* (Eurecom, NDSS 2026, 48 participants): novices' comprehension rose by *~98%*, and functions implementing *known algorithms* were triaged up to *$2.4times$ faster*.
   - *But*: experts gained little, and some outputs contained *harmful hallucinations* and misleading suggestions.
   #v(0.5em)
   #block(fill: m-dark, inset: 10pt, radius: 4pt, width: 100%,
-    text(fill: white, size: 15pt)[Biggest, most reliable win: *lowering the barrier to entry* and speeding up *first-pass triage* — not replacing expert judgement.])
+    text(fill: white, size: 15pt)[Biggest, most reliable win: *lowering the barrier to entry* and speeding up *first-pass triage*, not replacing expert judgement.])
 ]
 
-#slide(title: "Remediation & patching — still hard")[
+#slide(title: "Remediation & patching is still hard")[
   #set text(size: 16pt)
-  - *PatchEval* (2025, 1,000 real CVEs; 230 in execution sandbox): the best single model fixed only *~23%* (53/230). Different models solve different bugs — combining them reaches *~43%* (98/230).
+  - *PatchEval* (2025, 1,000 real CVEs, 230 in execution sandbox): the best single model fixed only *~23%* (53/230). Different models solve different bugs, and combining them reaches *~43%* (98/230).
   - *Architecture study* (arXiv:2603.01257, 2026) compares fixed-workflow vs. single-/multi-agent vs. general code agents, trading *accuracy vs. time & token cost*.
   #v(0.4em)
-  #alert[The LLM *proposes* a patch; a human (and a test-suite) *validates* it.]
+  //#alert[The LLM *proposes* a patch, a human (and a test-suite) *validates* it.]
+  The LLM *proposes* a patch, a human (and a test-suite) *validates* it.
 ]
 
 #slide(title: "The hallucination problem")[
@@ -211,7 +213,7 @@
   Failure modes reported repeatedly in the literature:
   - *Invented logic*: plausible-sounding but wrong explanations.
   - *Misleading renaming*: a function named `decrypt_payload` that doesn't decrypt.
-  - *Low recompilability*: DecLLM (ISSTA 2025) raised recompilable decompiled code from *9% → 25%* — i.e. most output still *doesn't even rebuild*.
+  - *Low recompilability*: DecLLM (ISSTA 2025) raised recompilable decompiled code from *9% → 25%*. I.e. most output still *doesn't even rebuild*.
   #v(0.3em)
   - *Why automated malware classification fails*: LLMs only read static text (without executing the binary), so obfuscation and hallucinated semantics lead to *wrong family/maliciousness labels*.
   - *Mitigation* #arrow *verify against ground truth:* recompile, diff behaviour, symbolic execution, unit tests.
@@ -224,20 +226,20 @@
   #agenda(current: 5)
 ]
 
-#slide(title: "Demo — before / after")[
+#slide(title: "Demo: before / after")[
   #set text(size: 16pt)
   *The "before":* in 2017, stopping *WannaCry* meant an analyst reading the malware's code live during a global outbreak to find the *kill-switch domain*. Manual, under pressure, hours of work.
   #v(0.5em)
   *The "after" (our demo, stopwatch on screen):*
-  + *Act A — Accelerated understanding:* Ghidra + LLM (via GhidraMCP) explains a documented sample in an *isolated VM* → behaviour summary, *IOCs* and a *YARA* rule + mitigation (disable SMBv1 / apply MS17-010).
-  + *Act B — End-to-end remediation:* our *own* vulnerable toy binary → LLM spots the bug in the pseudo-code, *proposes the patch*, we recompile → the crash is gone.
+  + *Act A - Accelerated understanding:* Ghidra + LLM (via GhidraMCP) explains a documented sample in an *isolated VM* → behaviour summary, *IOCs* and a *YARA* rule + mitigation (disable SMBv1 / apply MS17-010).
+  + *Act B - End-to-end remediation:* our *own* vulnerable toy binary → LLM spots the bug in the pseudo-code, *proposes the patch*, we recompile → the crash is gone.
 ]
 
 #slide[
   #set align(center + horizon)
   #text(size: 28pt, fill: m-accent, weight: "bold")[▶ Play recorded demo]
   #v(0.5em)
-  #text(size: 16pt, fill: m-gray)[(Stopwatch overlay: manual estimate vs. AI-augmented time)]
+  //#text(size: 16pt, fill: m-gray)[(Stopwatch overlay: manual estimate vs. AI-augmented time)]
 ]
 
 // ========================= 6. TAKEAWAYS / REFERENCES =========================
@@ -249,19 +251,19 @@
 
 #slide(title: "Takeaways")[
   #set text(size: 17.5pt)
-  - LLMs *accelerate* reverse engineering and *draft* remediations — biggest wins in *triage* and for *non-experts*.
+  - LLMs *accelerate* reverse engineering and *draft* remediations. The biggest wins are in *triage* and for *non-experts*.
   - They do *not* replace analysts: patch success is *modest* (~23%) and *hallucinations* are real.
   - The discipline that makes it work: *keep a human in the loop* and *verify every output against the binary*.
-  - Pure LLM *malware classification* remains unreliable because static models *cannot see runtime behaviour* — obfuscation and hallucinations lead to wrong labels without execution verification.
+  - Pure LLM *malware classification* remains unreliable because static models *cannot see runtime behaviour*, where obfuscation and hallucinations lead to wrong labels without execution verification.
 ]
 
 #slide(title: "References")[
   #set text(size: 13pt)
-  - *Human–LLM teaming in RE:* _"Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in Software Reverse Engineering"_, Eurecom, NDSS 2026.
-  - *Decompiler refinement:* *DeGPT* (NDSS 2024); *LLM4Decompile* (EMNLP 2024, arXiv:2403.05286); *SoK: LLMs for RE* (arXiv:2509.21821, 2025).
-  - *Recompilability & verification:* *DecLLM* (ISSTA 2025); *D-LiFT / D-Score* (arXiv:2506.10125, 2025).
-  - *Automated patching:* *PatchEval* (arXiv:2511.11019, 2025); *LLM-Based Architectures for Automated Patching* (arXiv:2603.01257, 2026).
-  - *Tooling & context:* *Ghidra* (NSA, ghidra-sre.org); *GhidraMCP* (LaurieWired, GitHub); *AV-TEST* Malware Statistics; *WannaCry* kill-switch analysis (2017).
+  - *Human-LLM teaming in RE:* _"Decompiling the Synergy: An Empirical Study of Human-LLM Teaming in Software Reverse Engineering"_, Eurecom, NDSS 2026.
+  - *Decompiler refinement:* *DeGPT* (NDSS 2024), *LLM4Decompile* (EMNLP 2024, arXiv:2403.05286), *SoK: LLMs for RE* (arXiv:2509.21821, 2025).
+  - *Recompilability & verification:* *DecLLM* (ISSTA 2025), *D-LiFT / D-Score* (arXiv:2506.10125, 2025).
+  - *Automated patching:* *PatchEval* (arXiv:2511.11019, 2025), *LLM-Based Architectures for Automated Patching* (arXiv:2603.01257, 2026).
+  - *Tooling & context:* *Ghidra* (NSA, ghidra-sre.org), *GhidraMCP* (LaurieWired, GitHub), *AV-TEST* Malware Statistics, *WannaCry* kill-switch analysis (2017).
 ]
 
 #focus-slide[
