@@ -66,7 +66,7 @@
 #text(size: 10pt)[
 Lee primero el bloque *🎤 Qué decir* para cada diapositiva: es el discurso base (3–6 frases), pensado para traducir fácil al inglés al hablar (las slides ya están en inglés → punto extra del profesor). El bloque *📚 Profundización* es para que *entiendas* de verdad el tema y puedas responder preguntas: trae las cifras exactas, sus matices y las referencias. No hace falta decir todo lo de profundización en voz alta.
 
-*Reparto sugerido (3 ponentes):* Autor 1 → slides 1–8 · Autor 2 → slides 9–15 · Autor 3 → slides 16–18.
+*Reparto sugerido (3 ponentes):* Autor 1 → slides 1–8 · Autor 2 → slides 9–16 · Autor 3 → slides 17–19.
 *Ritmo:* ~1 min por slide de contenido + ~4 min de vídeo-demo. Los divisores de agenda son transiciones de 5–10 s ("ya hemos visto X, ahora vamos a Y").
 ]
 
@@ -161,7 +161,16 @@ Este es el *framing honesto* que pide un trabajo de calidad y que nos cubre ante
 El mensaje de este par de carriles: la IA *no elimina* pasos críticos, los *reordena*. El esfuerzo humano se desplaza de *leer* a *verificar*. Útil para responder "¿entonces sobra el analista?": no, cambia su rol hacia validación y criterio.
 ]
 
-= Slide 11 — Comparison table
+= Slide 11 — Comedic relief: The human factor (Diamonds meme)
+
+#hablar[
+"Esta imagen resume con humor lo que ocurre en la práctica en el análisis manual: tras horas revisando ensamblador y pseudocódigo ruidoso, la fatiga cognitiva pasa factura y el analista puede rendirse o pasar por alto el detalle crítico —la vulnerabilidad, el kill-switch o el IOC clave— a escasos centímetros de encontrarlo. El valor de la IA aquí es actuar como co-piloto para evitar ese desgaste y asegurar que no dejamos diamantes sin picar."
+]
+#profundizar[
+Pausa cómica y visual (el clásico meme del minero que se rinde a centímetros de los diamantes). Conecta con el problema real del triaje manual: la fatiga humana y los errores por agotamiento ante cientos de funciones. Enlaza con el ejemplo posterior de WannaCry (encontrar el kill-switch bajo presión) y da paso natural a la tabla comparativa.
+]
+
+= Slide 12 — Comparison table
 
 #hablar[
 "Resumido en una tabla: la IA gana claramente en *velocidad de triaje*, en *comprensión para no-expertos* y en *cobertura* del código. El flujo manual gana en una cosa decisiva: la *garantía de corrección*, porque está verificado por el analista. Y el gran riesgo del carril de IA son las *alucinaciones*: errores dichos con total confianza. En una frase: la IA desplaza el esfuerzo de leer a verificar."
@@ -171,21 +180,27 @@ Las filas están pensadas para que cada una tenga un "ganador" distinto → evit
 ]
 
 // =================== SECCIÓN 4 ===================
-= Slide 12 — Divisor: Evidence — Speed, Accuracy & Hallucinations
+= Slide 13 — Divisor: Evidence — Speed, Accuracy & Hallucinations
 
 #hablar["¿Y qué dicen los datos? Vamos a la evidencia."]
 #profundizar[Transición.]
 
-= Slide 13 — Speed & comprehension
+= Slide 14 — Speed & comprehension
 
 #hablar[
-"Sobre velocidad y comprensión, el estudio *Decompiling the Synergy* de Eurecom, con 48 participantes haciendo ingeniería inversa (NDSS 2026), encontró que la comprensión de los *novatos* mejoró alrededor de un *98%*, y que las funciones que implementaban *algoritmos conocidos* se triaban hasta *2,4 veces más rápido*. Pero —y es importante— los *expertos* ganaron poco, y algunas respuestas incluían *alucinaciones dañinas*. O sea: la mayor ganancia es *bajar la barrera de entrada* y acelerar el *primer vistazo*, no reemplazar el juicio experto."
+"Sobre velocidad y comprensión, el estudio *Decompiling the Synergy* de Eurecom y ASU, con 48 participantes haciendo ingeniería inversa (NDSS 2026), arroja datos muy reveladores: la comprensión de los *novatos* mejoró alrededor de un *98%*, la *recuperación de artefactos* —como nombres de variables, tipos de datos y comentarios— subió un *66%*, y las funciones con *algoritmos conocidos* se triaron hasta *2,4 veces más rápido*. Pero —y este matiz es crucial— los *analistas expertos apenas ganaron velocidad*, y en ocasiones el LLM generó *alucinaciones dañinas* y pistas falsas. En definitiva: el impacto real y fiable de la IA es *asumir el trabajo tedioso* de fontanería y *bajar la barrera de entrada*, no reemplazar el juicio del experto."
 ]
 #profundizar[
-Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in Software Reverse Engineering" (Eurecom, NDSS 2026) — #link("https://www.eurecom.edu/en/node/4899620")[ficha]. Cifras: comprensión de novatos +~98%; hasta 2,4× más rápido en funciones con algoritmos conocidos; experts con poca mejora y presencia de hallucinations. Es el estudio con *sujetos humanos* más riguroso de los que manejamos → cítalo como el dato fuerte. Matiz honesto: los números dependen de la muestra y tareas concretas.
+Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in Software Reverse Engineering" (Eurecom / ASU, NDSS 2026, Distinguished Paper Award) — #link("https://www.eurecom.edu/en/node/4899620")[ficha].
+- *Metodología rigurosa*: 48 participantes (24 novatos y 24 expertos) analizando binarios estilo CTF representativos de software real durante más de 109 horas de actividad instrumentada.
+- *Cifras y hallazgos clave*:
+  + *Comprensión de novatos*: +~98%, recortando casi por completo la brecha de comprensión inicial respecto a los expertos.
+  + *Recuperación de artefactos (artifact recovery)*: +66% en reconstrucción de símbolos, nombres significativos de variables/funciones, tipos de datos y comentarios a partir del pseudocódigo plano de Ghidra.
+  + *Triage de algoritmos conocidos*: hasta 2,4× más rápido reconociendo patrones estándar (criptografía, hashing, compresión).
+- *Por qué ayuda en lo tedioso y no sustituye al analista experto*: renombrar manualmente decenas de variables anónimas (`local_18`, `uVar2`), tipar estructuras y entender rutinas estándar es el trabajo más pesado, repetitivo y fatigante de la ingeniería inversa. La IA automatiza esa "fontanería", liberando carga cognitiva. Sin embargo, los expertos ya infieren estos patrones casi de inmediato; para ellos, el LLM aporta poca aceleración neta e introduce fricción cuando produce alucinaciones sutiles que obligan a auditar el código con lupa. El análisis de alto nivel, la intuición y el juicio de seguridad siguen dependiendo enteramente del analista humano.
 ]
 
-= Slide 14 — Remediation & patching
+= Slide 15 — Remediation & patching
 
 #hablar[
 "En *remediación y parcheo* la foto es más dura. El benchmark *PatchEval*, con 1.000 CVEs reales (230 evaluados en sandbox de ejecución), encontró que el mejor modelo individual solo arreglaba alrededor del *23%* (53 de 230). Eso sí, distintos modelos resuelven fallos distintos: combinándolos se sube al *43%* (98 de 230). Además, los estudios de arquitecturas de parcheo comparan pipelines fijos frente a agentes, intercambiando *precisión contra tiempo y coste en tokens*. En conclusión: la IA *propone* el parche; el humano y la batería de tests *lo validan*."
@@ -200,7 +215,7 @@ Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in 
 - Si te preguntan por "tiempos de generar parches": no hay un estándar de wall-clock citable con confianza; por eso la *demo* aporta nuestra propia medición cronometrada.
 ]
 
-= Slide 15 — The hallucination problem
+= Slide 16 — The hallucination problem
 
 #hablar[
 "El gran problema son las *alucinaciones*. Tres formas típicas: *lógica inventada* —explicaciones plausibles pero falsas—; *renombrados engañosos* —una función llamada `decrypt_payload` que no descifra nada—; y *baja recompilabilidad*: el trabajo DecLLM subió el código decompilado que *vuelve a compilar* del 9% al 25%, es decir, la mayoría *ni siquiera reconstruye*. Estos fallos explican por qué la IA por sí sola es poco fiable para *clasificar malware* automáticamente: el modelo solo lee texto estático, no ejecuta el binario, por lo que la ofuscación y las alucinaciones semánticas llevan a etiquetas erróneas. ¿La mitigación? *Verificar contra la verdad del binario*: recompilar, comparar comportamiento, ejecución simbólica y tests."
@@ -212,12 +227,12 @@ Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in 
 ]
 
 // =================== SECCIÓN 5 ===================
-= Slide 16 — Divisor: Live Demo
+= Slide 17 — Divisor: Live Demo
 
 #hablar["Y ahora lo veamos en acción."]
 #profundizar[Transición a la demo.]
 
-= Slide 17 — Demo: before / after
+= Slide 18 — Demo: before / after
 
 #hablar[
 "Para dar perspectiva, el 'antes': en 2017, frenar *WannaCry* consistió en que un analista leyera el código del malware *en directo*, durante un brote mundial, para encontrar el *dominio kill-switch*. Trabajo manual, bajo presión, horas. El 'después' es nuestra demo, con *cronómetro en pantalla*, en dos actos: en el *Acto A* usamos Ghidra con un LLM vía GhidraMCP para explicar una muestra documentada en una *VM aislada* y sacar un resumen de comportamiento, IOCs y una regla YARA más la mitigación. En el *Acto B* cogemos un binario vulnerable *hecho por nosotros*: el LLM detecta el fallo en el pseudocódigo, *propone el parche*, recompilamos y el crash desaparece."
@@ -228,7 +243,7 @@ Estudio: "Decompiling the Synergy: An Empirical Study of Human–LLM Teaming in 
 - Enfoque *defensivo*: remediación = IOCs/YARA/mitigación y parcheo de binario propio. Nada de distribuir malware.
 ]
 
-= Slide 18 — Play recorded demo
+= Slide 19 — Play recorded demo
 
 #hablar[
 "Vamos con el vídeo." (Reproducir. Al terminar, una frase: "Fijaos en el cronómetro: el triaje y el parcheo que a mano llevan mucho más, aquí se hacen en minutos *con verificación*.")
@@ -238,21 +253,25 @@ Cumple el ítem "Demo (real/vídeo)" del profesor. Ten el vídeo *embebido o en 
 ]
 
 // =================== SECCIÓN 6 ===================
-= Slide 19 — Divisor: Takeaways
+= Slide 20 — Divisor: Takeaways
 
 #hablar["Para cerrar, las ideas que os queréis llevar."]
 #profundizar[Transición.]
 
-= Slide 20 — Takeaways
+= Slide 21 — Takeaways
 
 #hablar[
-"Tres mensajes. Uno: los LLM *aceleran* la ingeniería inversa y *redactan* borradores de remediación, sobre todo en *triaje* y para *no-expertos*. Dos: *no* sustituyen al analista —el éxito parcheando es modesto, en torno al 23%, y las alucinaciones son reales. Tres: lo que hace que funcione es *mantener un humano en el bucle* y *verificar cada salida contra el binario*. Y esto explica por qué la IA estática todavía *falla al clasificar malware* de forma fiable: al no ver el comportamiento en ejecución, la ofuscación y las alucinaciones llevan a etiquetas equivocadas sin esa verificación."
+"Para cerrar, tres conclusiones clave. Uno: los LLM *aceleran* la ingeniería inversa asumiendo el *trabajo tedioso* —recuperar símbolos, tipos y reconocer patrones conocidos— y *derriban barreras para no-expertos*. Dos: *no* sustituyen a los analistas expertos: las ganancias para expertos son marginales, el éxito parcheando es modesto (en torno al 23%) y las *alucinaciones* son un peligro real. Tres: la disciplina imprescindible es *mantener un humano en el bucle* y *verificar cada salida contra el binario*. Y esto explica por qué la IA estática todavía *falla al clasificar malware* de forma autónoma: al no ver la ejecución dinámica, la ofuscación y las alucinaciones provocan etiquetas erróneas sin esa verificación."
 ]
 #profundizar[
-Cierre que amarra el hilo conductor (acelerador + verificación). Deja la última frase explicando explícitamente *por qué* falla la clasificación de malware (análisis estático sin ejecución + alucinaciones) porque conecta con el temario de la asignatura y da pie a preguntas.
+Cierre que amarra el hilo conductor completo de la presentación:
+1. *Acelerador del trabajo tedioso*: la IA brilla en tareas mecánicas y repetitivas (recuperación de artefactos +66%, renombrado de variables y funciones, resúmenes preliminares), lo que democratiza el análisis para perfiles junior (+98% comprensión) y ahorra fatiga.
+2. *Límite frente al juicio experto*: no reemplaza el criterio senior ni razona de forma autónoma; los expertos apenas mejoran su velocidad, la tasa de parches autónomos válidos es solo del ~23% (PatchEval), y las alucinaciones requieren supervisión crítica constante.
+3. *Verificación obligatoria*: el binario es la única fuente de verdad (recompilación, pruebas dinámicas, auditoría del analista).
+4. *Conexión con malware*: sin ejecución dinámica, las etiquetas estáticas de familias o maliciosidad son vulnerables a ofuscación y alucinaciones.
 ]
 
-= Slide 21 — References
+= Slide 22 — References
 
 #hablar[
 "Aquí tenéis las referencias principales de los estudios, benchmarks y herramientas que hemos citado durante la presentación."
@@ -261,7 +280,7 @@ Cierre que amarra el hilo conductor (acelerador + verificación). Deja la últim
 Diapositiva de fuentes y referencias bibliográficas para respaldar todas las cifras de la charla. El listado completo y comentado con enlaces está en la sección final de este guion.
 ]
 
-= Slide 22 — Thank you / Q&A
+= Slide 23 — Thank you / Q&A
 
 #hablar[
 "Gracias. ¿Preguntas?"
@@ -284,30 +303,30 @@ Fuentes *verificadas* (arXiv/NDSS/repos reales) para rellenar y defender las dia
 Cada entrada indica a qué *slide* da soporte. Si solo vas a leer 2–3, empieza por los *SoK/surveys* (apartado E): dan el panorama y enlazan al resto.
 ]
 
-== A) Ingeniería inversa / decompilación asistida por LLM  → slides 5, 8, 13, 15
+== A) Ingeniería inversa / decompilación asistida por LLM  → slides 5, 8, 14, 16
 
 #text(size: 9.5pt)[
-- *Decompiling the Synergy: Human–LLM Teaming in RE* (NDSS 2026, Eurecom) — #link("https://www.eurecom.edu/en/node/4899620")[ficha]. Estudio con 48 personas; novatos +~98% comprensión, hasta 2,4× en algoritmos conocidos, poca mejora en expertos, hallucinations. *El dato "fuerte" de velocidad/comprensión.* [Slide 13]
+- *Decompiling the Synergy: Human–LLM Teaming in RE* (NDSS 2026, Eurecom / ASU) — #link("https://www.eurecom.edu/en/node/4899620")[ficha]. Estudio con 48 personas (24 novatos, 24 expertos); novatos +~98% comprensión, +66% en recuperación de artefactos (símbolos, tipos, comentarios), hasta 2,4× en algoritmos conocidos; expertos con mejora marginal y presencia de alucinaciones dañinas. Fundamenta que el valor real está en mitigar el trabajo tedioso y democratizar el triaje. [Slides 14, 21]
 - *LLM4Decompile: Decompiling Binary Code with LLMs* (arXiv 2403.05286, EMNLP 2024) — #link("https://arxiv.org/abs/2403.05286")[abs] · #link("https://github.com/albertan017/LLM4Decompile")[código]. Modelos abiertos (1.3B–33B) para decompilar; benchmark *Decompile-Eval* (recompilabilidad/re-ejecutabilidad en vez de solo tokens); la variante *-Ref* refina la salida de Ghidra. [Slides 5, 8]
-- *DeGPT: Optimizing Decompiler Output with LLM* (NDSS 2024) — #link("https://www.ndss-symposium.org/ndss-paper/degpt-optimizing-decompiler-output-with-llm/")[paper] · #link("https://github.com/PeiweiHu/DeGPT")[código]. Mejora la *legibilidad* de la salida de Ghidra (−24,4% carga cognitiva; 62,9% de comentarios con semántica útil); usa 3 roles LLM + filtro MSSC para no cambiar la semántica. *Ejemplo concreto de "explicar/renombrar".* [Slides 8, 13]
-- *DecLLM* (ISSTA 2025) — #link("https://daoyuan14.github.io/papers/ISSTA25_DecLLM.pdf")[PDF]. Recompilabilidad 9%→25% con contexto completo; nombra fallos: attention degradation, shortcuts, hallucination. [Slide 15]
+- *DeGPT: Optimizing Decompiler Output with LLM* (NDSS 2024) — #link("https://www.ndss-symposium.org/ndss-paper/degpt-optimizing-decompiler-output-with-llm/")[paper] · #link("https://github.com/PeiweiHu/DeGPT")[código]. Mejora la *legibilidad* de la salida de Ghidra (−24,4% carga cognitiva; 62,9% de comentarios con semántica útil); usa 3 roles LLM + filtro MSSC para no cambiar la semántica. *Ejemplo concreto de "explicar/renombrar".* [Slides 8, 14]
+- *DecLLM* (ISSTA 2025) — #link("https://daoyuan14.github.io/papers/ISSTA25_DecLLM.pdf")[PDF]. Recompilabilidad 9%→25% con contexto completo; nombra fallos: attention degradation, shortcuts, hallucination. [Slide 16]
 ]
 
-== B) Remediación / parcheo automático (APR) con LLM  → slide 14
+== B) Remediación / parcheo automático (APR) con LLM  → slide 15
 
 #text(size: 9.5pt)[
-- *PatchEval* (arXiv 2511.11019, 2025) — #link("https://arxiv.org/abs/2511.11019")[abs]. 1.000 CVEs reales; mejor modelo ~23%; fuerte complementariedad entre modelos; sandbox para comprobar que no hay regresiones. [Slide 14]
-- *A Systematic Study of LLM-Based Architectures for Automated Patching* (arXiv 2603.01257, 2026) — #link("https://arxiv.org/abs/2603.01257")[abs]. Compara workflow fijo / 1 agente / multi-agente / agentes de código; mide correctitud, *tiempo* y *tokens*. Útil si te preguntan por coste/tiempo. [Slide 14]
-- *A Survey of LLM-based Automated Program Repair* (arXiv 2506.23749, 2025) — #link("https://arxiv.org/abs/2506.23749")[abs]. Clasifica 63 sistemas en 4 paradigmas (fine-tuning, prompting, procedural, agentic). *Buen mapa del área de parcheo.* [Slide 14]
-- *LLM-based APR — Systematic Literature Review* (arXiv 2405.01466) — #link("https://arxiv.org/abs/2405.01466")[abs]. 189 trabajos (2020–2025), 20 tipos de bug incluyendo vulnerabilidades de seguridad. [Slide 14]
-- *SEC-bench* (benchmark de seguridad; vía survey 2510.09721) — tasas reportadas ~18% (PoC) y ~34% (patching). Cítalo con cautela (dato secundario) como refuerzo de "el parcheo autónomo es difícil". [Slide 14]
+- *PatchEval* (arXiv 2511.11019, 2025) — #link("https://arxiv.org/abs/2511.11019")[abs]. 1.000 CVEs reales; mejor modelo ~23%; fuerte complementariedad entre modelos; sandbox para comprobar que no hay regresiones. [Slide 15]
+- *A Systematic Study of LLM-Based Architectures for Automated Patching* (arXiv 2603.01257, 2026) — #link("https://arxiv.org/abs/2603.01257")[abs]. Compara workflow fijo / 1 agente / multi-agente / agentes de código; mide correctitud, *tiempo* y *tokens*. Útil si te preguntan por coste/tiempo. [Slide 15]
+- *A Survey of LLM-based Automated Program Repair* (arXiv 2506.23749, 2025) — #link("https://arxiv.org/abs/2506.23749")[abs]. Clasifica 63 sistemas en 4 paradigmas (fine-tuning, prompting, procedural, agentic). *Buen mapa del área de parcheo.* [Slide 15]
+- *LLM-based APR — Systematic Literature Review* (arXiv 2405.01466) — #link("https://arxiv.org/abs/2405.01466")[abs]. 189 trabajos (2020–2025), 20 tipos de bug incluyendo vulnerabilidades de seguridad. [Slide 15]
+- *SEC-bench* (benchmark de seguridad; vía survey 2510.09721) — tasas reportadas ~18% (PoC) y ~34% (patching). Cítalo con cautela (dato secundario) como refuerzo de "el parcheo autónomo es difícil". [Slide 15]
 ]
 
-== C) Alucinaciones, verificación y límites  → slide 15
+== C) Alucinaciones, verificación y límites  → slide 16
 
 #text(size: 9.5pt)[
-- *D-LiFT / D-Score* (arXiv 2506.10125) — #link("https://arxiv.org/abs/2506.10125")[abs]. Los pipelines introducen errores sintácticos/semánticos nuevos; proponen *puntuar* precisión (compilador) y semántica (ejecución simbólica). *La idea "verifica contra el binario".* [Slide 15]
-- Conexión con *clasificación de malware*: si el modelo alucina qué hace el código, la etiqueta (familia/benigno-malicioso) hereda el error → por eso la verificación es innegociable. Argumento de cierre. [Slides 15, 20]
+- *D-LiFT / D-Score* (arXiv 2506.10125) — #link("https://arxiv.org/abs/2506.10125")[abs]. Los pipelines introducen errores sintácticos/semánticos nuevos; proponen *puntuar* precisión (compilador) y semántica (ejecución simbólica). *La idea "verifica contra el binario".* [Slide 16]
+- Conexión con *clasificación de malware*: si el modelo alucina qué hace el código, la etiqueta (familia/benigno-malicioso) hereda el error → por eso la verificación es innegociable. Argumento de cierre. [Slides 16, 21]
 ]
 
 == D) Herramientas y puentes (Ghidra, MCP)  → slides 7, 8 y demo
@@ -326,11 +345,11 @@ Cada entrada indica a qué *slide* da soporte. Si solo vas a leer 2–3, empieza
 - *LLM for Software Security: Code/Malware Analysis & RE* (Jelodar et al., arXiv 2504.07137, 2025) — #link("https://arxiv.org/abs/2504.07137")[abs]. Survey centrado en malware; datasets y modelos. [Transversal]
 ]
 
-== F) Contexto de malware y casos  → slides 4, 17
+== F) Contexto de malware y casos  → slides 4, 18
 
 #text(size: 9.5pt)[
 - *AV-TEST — Malware Statistics* — #link("https://www.av-test.org/en/statistics/malware/")[enlace]. Cifras de volumen (cientos de miles de muestras nuevas/día). [Slide 4]
-- *WannaCry ransomware attack* — #link("https://en.wikipedia.org/wiki/WannaCry_ransomware_attack")[Wikipedia]. Caso del kill-switch (12-may-2017, M. Hutchins). Matiz: hallazgo en parte accidental, varios investigadores. [Slide 17]
+- *WannaCry ransomware attack* — #link("https://en.wikipedia.org/wiki/WannaCry_ransomware_attack")[Wikipedia]. Caso del kill-switch (12-may-2017, M. Hutchins). Matiz: hallazgo en parte accidental, varios investigadores. [Slide 18]
 - *MITRE ATT&CK* — #link("https://attack.mitre.org/")[attack.mitre.org]. Marco de técnicas para describir comportamiento del malware (útil para IOCs/mitigación de la demo). [Demo]
 - *CWE* (Common Weakness Enumeration) — #link("https://cwe.mitre.org/")[cwe.mitre.org]. Para nombrar el fallo del binario de la demo (CWE-120/CWE-787, buffer overflow). [Demo]
 ]

@@ -168,6 +168,17 @@
   )
 ]
 
+#slide(title: "The human factor: fatigue & mistakes")[
+  #align(center)[
+    #image("diamonds.jpg", height: 58%)
+    #v(0.3em)
+    #text(size: 15pt)[
+      Hours of manual decompilation cause cognitive fatigue: \
+      without AI assistance, analysts risk missing critical details or giving up inches before the breakthrough.
+    ]
+  ]
+]
+
 #slide(title: "Where the AI lane helps, and where it doesn't")[
   #set text(size: 15pt)
   #table(columns: (1.4fr, 1fr, 1fr), align: (left, center, center), inset: 7pt,
@@ -192,11 +203,11 @@
 
 #slide(title: "Speed & comprehension: what studies show")[
   #set text(size: 16pt)
-  - *DHuman-LLM teaming study* (Eurecom, NDSS 2026, 48 participants): novices' comprehension rose by *~98%*, and functions implementing *known algorithms* were triaged up to *$2.4times$ faster*.
+  - *Human-LLM teaming study* (Eurecom, NDSS 2026, 48 participants): novices' comprehension rose by *~98%*, functions implementing *known algorithms* were triaged up to *$2.4times$ faster*, and *artifact recovery* increased by *66%*.
   - *But*: experts gained little, and some outputs contained *harmful hallucinations* and misleading suggestions.
   #v(0.5em)
   #block(fill: m-dark, inset: 10pt, radius: 4pt, width: 100%,
-    text(fill: white, size: 15pt)[Biggest, most reliable win: *lowering the barrier to entry* and speeding up *first-pass triage*, not replacing expert judgement.])
+    text(fill: white, size: 15pt)[Biggest, most reliable win: *lowering the barrier to entry* and speeding up *tedious work*, not replacing expert judgement.])
 ]
 
 #slide(title: "Remediation & patching is still hard")[
@@ -251,8 +262,8 @@
 
 #slide(title: "Takeaways")[
   #set text(size: 17.5pt)
-  - LLMs *accelerate* reverse engineering and *draft* remediations. The biggest wins are in *triage* and for *non-experts*.
-  - They do *not* replace analysts: patch success is *modest* (~23%) and *hallucinations* are real.
+  - LLMs *accelerate* reverse engineering by automating *tedious work* (artifact recovery, known patterns) and *lowering barriers for non-experts*.
+  - They do *not* replace expert analysts: gains for experts are *marginal*, patch success is *modest* (~23%), and *hallucinations* are real.
   - The discipline that makes it work: *keep a human in the loop* and *verify every output against the binary*.
   - Pure LLM *malware classification* remains unreliable because static models *cannot see runtime behaviour*, where obfuscation and hallucinations lead to wrong labels without execution verification.
 ]
