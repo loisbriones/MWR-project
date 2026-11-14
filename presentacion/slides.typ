@@ -155,6 +155,8 @@
       + Reproduce behaviour in a sandbox.
       + Locate the bug, design a mitigation.
       #v(0.3em) _Hours-days, depth depends on expert skill._
+      #v(0.3em)
+      #align(center)[#image("img/computer_guy.jpg", width: 60%)]
     ],
     block(fill: m-accent.lighten(78%), inset: 10pt, radius: 4pt, width: 100%)[
       *AI-augmented*
@@ -164,6 +166,8 @@
       + LLM drafts IOCs / YARA / patch.
       + *Analyst verifies* against the binary.
       #v(0.3em) _Minutes for triage, verification still required._
+      #v(0.3em)
+      #align(center)[#image("img/ai_augmented.png", width: 55%)]
     ],
   )
 ]
@@ -208,6 +212,15 @@
   #v(0.5em)
   #block(fill: m-dark, inset: 10pt, radius: 4pt, width: 100%,
     text(fill: white, size: 15pt)[Biggest, most reliable win: *lowering the barrier to entry* and speeding up *tedious work*, not replacing expert judgement.])
+  #v(0.6em)
+  //#align(center)[#image("img/noob_to_pro.png", width: 40%)]
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: -10em,
+    align: center,
+    image("img/faster.png", height: 5cm),
+    image("img/brain.jpg", height: 5cm),
+  )
 ]
 
 #slide(title: "Remediation & patching is still hard")[
@@ -216,7 +229,15 @@
   - *Architecture study* (arXiv:2603.01257, 2026) compares fixed-workflow vs. single-/multi-agent vs. general code agents, trading *accuracy vs. time & token cost*.
   #v(0.4em)
   //#alert[The LLM *proposes* a patch, a human (and a test-suite) *validates* it.]
-  The LLM *proposes* a patch, a human (and a test-suite) *validates* it.
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 0em,
+    align: center,
+    text("The LLM *proposes* a patch, a human (and a test-suite) *validates* it."),
+    image("img/patch.png", width: 50%)
+  
+  )
+  //#align(center)[#image("img/patch.png", width: 20%)]
 ]
 
 #slide(title: "The hallucination problem")[
