@@ -75,26 +75,208 @@
 ]
 
 #slide(title: "Reverse engineering is slow, scarce and expensive")[
-  #set text(size: 18pt)
-  - Malware triage and patching are *bottlenecked by human experts*: disassembly, decompilation and dynamic analysis take *hours to days* per sample.
-  - Volume keeps growing: *hundreds of thousands* of new samples per day, wich make a large *backlog of unpatched CVEs*.
-  - Skills are rare: reading x86/ARM assembly and noisy decompiler pseudo-code is hard and error-prone.
+  #set text(size: 15.5pt)
+  #grid(
+    columns: (1.15fr, 0.85fr),
+    gutter: 14pt,
+    [
+      - Malware triage and patching are *bottlenecked by human experts*. 
+      - *Hundreds of thousands* of new samples per day #sym.arrow *backlog of unpatched CVEs*.
+      - Reading x86/ARM *assembly* and noisy *decompiler pseudo-code* is hard and error-prone.
+    ],
+    [
+      #align(center)[
+        #block(radius: 4pt, clip: true)[
+          #image("img/cve-icu-cves-by-year.png", width: 100%)
+        ]
+        #v(0.3em)
+        #text(size: 11pt, fill: m-gray)[*CVEs per year:* AI has increased the number of CVEs to patch to unsustainable levels.]
+      ]
+    ],
+  )
 
-  #v(0.5em)
-  #block(fill: m-dark, inset: 10pt, radius: 4pt, width: 100%,
+  #v(0.4em)
+  #block(fill: m-dark, inset: 9pt, radius: 4pt, width: 100%,
     //text(fill: white)[*The question:* can generative AI shrink the time-to-understanding and time-to-patch (without lying to us)?])
-    text(fill: white)[Can generative AI shrink the time-to-understanding and time-to-patch (without lying to us)?])
+    text(fill: white, size: 14pt)[Can generative AI shrink the time-to-understanding and time-to-patch (without lying to us)?])
 ]
 
 #slide(title: "The promise of LLMs in this workflow")[
-  #set text(size: 18pt)
-  LLMs can act as a *force multiplier* on top of existing tools:
-  - *Explain* decompiled pseudo-code in plain language.
-  - *Rename* functions / variables and *annotate* structures to recover intent.
-  - *Hypothesize* the exploited bug and *draft* a candidate mitigation or patch.
+  #set text(size: 13pt)
+  #v(-0.6em)
 
-  #v(0.6em)
-  An LLM is an *accelerator and co-pilot*, *not* an autonomous replacement for the analyst. Every output must be *verified against the binary*.
+  // Top Input Box: Data source
+  #align(center)[
+    #block(
+      fill: m-light,
+      stroke: 1pt + m-dark.lighten(40%),
+      radius: 4pt,
+      inset: (x: 16pt, y: 6pt),
+    )[
+      #box(fill: m-dark, inset: (x: 7pt, y: 3pt), radius: 2pt)[
+        #text(fill: white, weight: "bold", size: 10pt)[INPUT]
+      ]
+      #h(8pt)
+      #text(fill: m-dark, weight: "bold", size: 12.5pt)[Raw Decompiled Pseudo-Code]
+      #h(6pt)
+      #text(fill: m-gray.darken(10%), size: 11pt)[(Ghidra: stripped symbols, untyped memory, raw offsets)]
+    ]
+  ]
+
+  #v(-0.2em)
+  #align(center)[
+    #text(fill: m-accent, size: 15pt, weight: "bold")[#sym.arrow.b]
+    #h(8pt)
+    #text(fill: m-accent, weight: "bold", size: 12pt)[LLM AS A FORCE MULTIPLIER]
+    #h(8pt)
+    #text(fill: m-accent, size: 15pt, weight: "bold")[#sym.arrow.b]
+  ]
+  #v(-0.15em)
+
+  // 3-Stage Iterative Workflow with connecting arrows
+  #grid(
+    columns: (1fr, auto, 1fr, auto, 1fr),
+    gutter: 7pt,
+    align: (top, horizon, top, horizon, top),
+    // Stage 1
+    block(
+      fill: m-light,
+      stroke: 1pt + m-dark.lighten(65%),
+      radius: 4pt,
+      inset: (x: 10pt, y: 9pt),
+      width: 100%,
+    )[
+      #block(
+        fill: m-dark,
+        radius: 3pt,
+        inset: (y: 4.5pt),
+        width: 100%,
+        align(center)[
+          #text(fill: m-accent, weight: "bold", size: 12pt)[1]
+          #text(fill: white.darken(10%), size: 10pt)[ #sym.circle.filled.small ]
+          #text(fill: white, weight: "bold", size: 12pt)[Explain]
+        ]
+      )
+      #v(4pt)
+      #align(center)[
+        #block(fill: m-accent.lighten(85%), inset: (x: 5pt, y: 3.5pt), radius: 3pt, width: 100%)[
+          #text(size: 9.5pt, font: "DejaVu Sans Mono")[pseudo-code #sym.arrow.r #text(weight: "bold")[plain English]]
+        ]
+      ]
+      //#v(3pt)
+      //#set text(size: 11pt)
+      //- Summarizes complex logic.
+      //- Decodes compiler idioms.
+      //- Drastically cuts triage time.
+    ],
+    // Arrow 1 -> 2
+    text(fill: m-accent, size: 18pt, weight: "bold")[#sym.arrow.r],
+    // Stage 2
+    block(
+      fill: m-light,
+      stroke: 1pt + m-dark.lighten(65%),
+      radius: 4pt,
+      inset: (x: 10pt, y: 9pt),
+      width: 100%,
+    )[
+      #block(
+        fill: m-dark,
+        radius: 3pt,
+        inset: (y: 4.5pt),
+        width: 100%,
+        align(center)[
+          #text(fill: m-accent, weight: "bold", size: 12pt)[2]
+          #text(fill: white.darken(10%), size: 10pt)[ #sym.circle.filled.small ]
+          #text(fill: white, weight: "bold", size: 12pt)[Recover Intent]
+        ]
+      )
+      #v(4pt)
+      #align(center)[
+        #block(fill: m-accent.lighten(85%), inset: (x: 5pt, y: 3.5pt), radius: 3pt, width: 100%)[
+          #text(size: 9.5pt, font: "DejaVu Sans Mono")[FUN_0040 #sym.arrow.r #text(weight: "bold")[decrypt_cfg()]]
+        ]
+      ]
+      //#v(3pt)
+      //#set text(size: 11pt)
+      //- Renames vars & functions.
+      //- Labels struct fields & types.
+      //- Rebuilds author semantics.
+    ],
+    // Arrow 2 -> 3
+    text(fill: m-accent, size: 18pt, weight: "bold")[#sym.arrow.r],
+    // Stage 3
+    block(
+      fill: m-light,
+      stroke: 1pt + m-dark.lighten(65%),
+      radius: 4pt,
+      inset: (x: 10pt, y: 9pt),
+      width: 100%,
+    )[
+      #block(
+        fill: m-dark,
+        radius: 3pt,
+        inset: (y: 4.5pt),
+        width: 100%,
+        align(center)[
+          #text(fill: m-accent, weight: "bold", size: 12pt)[3]
+          #text(fill: white.darken(10%), size: 10pt)[ #sym.circle.filled.small ]
+          #text(fill: white, weight: "bold", size: 12pt)[Hypothesize & Patch]
+        ]
+      )
+      #v(4pt)
+      #align(center)[
+        #block(fill: m-accent.lighten(85%), inset: (x: 5pt, y: 3.5pt), radius: 3pt, width: 100%)[
+          #text(size: 9.5pt, font: "DejaVu Sans Mono")[exploit bug #sym.arrow.r #text(weight: "bold")[candidate fix]]
+        ]
+      ]
+      //#v(3pt)
+      //#set text(size: 11pt)
+      //- Pinpoints vulnerable logic.
+      //- Drafts candidate C patches.
+      //- Generates IOCs & YARA rules.
+    ],
+  )
+
+  #v(-0.25em)
+  #grid(
+    columns: (1fr, auto, 1fr, auto, 1fr),
+    gutter: 7pt,
+    align: center,
+    text(fill: rgb("#2e7d32"), size: 15pt, weight: "bold")[#sym.arrow.b],
+    [],
+    text(fill: rgb("#2e7d32"), size: 15pt, weight: "bold")[#sym.arrow.b],
+    [],
+    text(fill: rgb("#2e7d32"), size: 15pt, weight: "bold")[#sym.arrow.b],
+  )
+  #v(-0.35em)
+
+  // Bottom Verification Bar: Ground Truth Guardrail
+  #block(
+    fill: rgb("#e8f5e9"),
+    stroke: 1.2pt + rgb("#2e7d32"),
+    radius: 4pt,
+    inset: (x: 10pt, y: 6pt),
+    width: 100%,
+  )[
+    #grid(
+      columns: (auto, 1fr),
+      gutter: 11pt,
+      align: horizon,
+      [
+        #block(
+          fill: rgb("#2e7d32"),
+          inset: (x: 8pt, y: 4.5pt),
+          radius: 3pt,
+          text(fill: white, weight: "bold", size: 10.5pt)[Analyst in the Loop]
+        )
+      ],
+      [
+        #text(size: 11pt, fill: rgb("#1b5e20"))[
+          *Co-pilot, not autonomous replacement:* LLM outputs are hypotheses. Every finding and patch *must be verified against the binary* (recompilation, dynamic execution, test suite).
+        ]
+      ]
+    )
+  ]
 ]
 
 // ========================= 2. TOOLCHAIN =========================
@@ -109,14 +291,14 @@
   #grid(columns: (1fr, 1fr), gutter: 16pt,
     [
       *Static analysis*
-      - Disassemblers / decompilers: *Ghidra* (NSA, free), IDA Pro, Binary Ninja.
+      - Disassemblers / decompilers.
       - Decompiler output = *pseudo-C* reconstructed from machine code: approximate, no original names/comments.
       - `strings`, PE/ELF headers, imports.
     ],
     [
       *Dynamic analysis*
-      - Debuggers: x64dbg, GDB.
-      - Sandboxes: Cuckoo / CAPE, isolated VMs.
+      - Debuggers.
+      - Sandboxes.
       - Network / behaviour capture.
     ],
   )
@@ -132,9 +314,9 @@
     #pbox[Binary] #arrow #pbox[Ghidra\ (decompiler)] #arrow #pbox(fill: m-accent)[MCP bridge] #arrow #pbox[LLM] #arrow #pbox(fill: rgb("#2e7d32"))[Analyst]
   ]
   #v(0.5em)
-  - *MCP (Model Context Protocol)* bridges, e.g. *GhidraMCP* (LaurieWired), expose Ghidra's API (list/decompile functions, rename, cross-refs) to an LLM agent.
+  - *MCP (Model Context Protocol)*: e.g. *GhidraMCP* (LaurieWired), expose Ghidra's API to an LLM agent.
   - *Static vs. dynamic:* bridges also exist for debuggers/sandboxes, but our focus (and most tooling) is *static decompilation & patching* (using dynamic runs to *verify*).
-  - The agent *iterates* (decompile → explain → rename → re-read → propose patch) with a *human in the loop*.
+  - The agent *iterates* with a *human in the loop*.
 ]
 
 // ========================= 3. WORKFLOW =========================
@@ -174,7 +356,7 @@
 
 #slide(title: "The human factor: fatigue & mistakes")[
   #align(center)[
-    #image("diamonds.jpg", height: 58%)
+    #image("img/diamonds.jpg", height: 58%)
     #v(0.3em)
     #text(size: 15pt)[
       Hours of manual decompilation cause cognitive fatigue: \
