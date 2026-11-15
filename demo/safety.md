@@ -14,10 +14,14 @@
    vídeo mostrad solo pseudocódigo/indicadores. Descargad la muestra de un repositorio de
    investigación reconocido (p. ej. MalwareBazaar) y con contraseña, bajo vuestra
    responsabilidad y la normativa de la universidad.
-4. **El binario vulnerable propio (`vuln/`) es inofensivo**: es un programa de juguete que
-   escribimos nosotros; se puede compilar y ejecutar en el host sin riesgo.
+4. **Ghidra no ejecuta nada.** Importar, decompilar, renombrar o dejar que la IA lea el
+   binario por GhidraMCP es análisis **estático**: la muestra nunca corre. Ghidra trabaja sobre
+   una copia dentro de su proyecto; el `.bin` original queda en solo-lectura
+   (ver `analisis/manual-sin-riesgo.md`).
+5. **Los proyectos de Ghidra no se suben** (`*.gpr`, `*.rep/` están en el `.gitignore` raíz),
+   porque contienen la muestra importada.
 
-## Alternativa 100% sin muestra real
-Si preferís cero riesgo, **omitid el Acto A con WannaCry** y basad toda la demo en el
-binario vulnerable propio (Acto B). Sigue demostrando el ciclo completo
-decompilar → la IA detecta el fallo → propone parche → recompilar → arreglado.
+## Lo que se hizo en la demo final
+Las dos partes (manual y con Claude Code + GhidraMCP) son **solo estáticas** sobre la misma
+muestra de WannaCry. **No se ejecutó la muestra** en ningún momento; las únicas cosas que se
+ejecutaron fueron las pruebas de las reglas YARA (`yara-python`) sobre ficheros.
