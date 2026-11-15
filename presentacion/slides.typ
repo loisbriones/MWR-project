@@ -287,23 +287,32 @@
 ]
 
 #slide(title: "The classic RE stack")[
-  #set text(size: 17pt)
-  #grid(columns: (1fr, 1fr), gutter: 16pt,
+  #set text(size: 15pt)
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 18pt,
+    row-gutter: 12pt,
     [
       *Static analysis*
-      - Disassemblers / decompilers.
+      - Disassemblers / decompilers (*Ghidra*, IDA Pro).
       - Decompiler output = *pseudo-C* reconstructed from machine code: approximate, no original names/comments.
       - `strings`, PE/ELF headers, imports.
     ],
     [
       *Dynamic analysis*
-      - Debuggers.
-      - Sandboxes.
+      - Debuggers (*GDB*, x64dbg).
+      - Sandboxes (Cuckoo, CAPE).
       - Network / behaviour capture.
     ],
+    align(center + horizon)[
+      #image("img/Ghidra.png", height: 65pt)
+    ],
+    align(center + horizon)[
+      #image("img/GDB_Archer_Fish_by_Andreas_Farnes.webp", height: 68pt)
+    ],
   )
-  #v(0.4em)
-  #block(fill: m-light, inset: 8pt, radius: 4pt, width: 100%, text(size: 15pt)[*Pseudo-code $eq.not$ source code.* The decompiler guesses types and control flow, which is exactly the noisy input we ask an LLM to interpret.])
+  #v(0.3em)
+  #block(fill: m-light, inset: 8pt, radius: 4pt, width: 100%, text(size: 13.5pt)[*Pseudo-code $eq.not$ source code.* The decompiler guesses types and control flow, which is exactly the noisy input we ask an LLM to interpret.])
 ]
 
 #slide(title: "The LLM-augmented stack")[
