@@ -54,10 +54,10 @@
 
 // Small helper: a labelled "box" for pipeline diagrams
 #let pbox(body, fill: m-dark, tcol: white) = box(
-  fill: fill, inset: 10pt, radius: 4pt,
-  text(fill: tcol, size: 17pt, weight: "bold")[#body],
+  fill: fill, inset: 8pt, radius: 4pt,
+  text(fill: tcol, size: 14pt, weight: "bold")[#body],
 )
-#let arrow = text(size: 22pt, fill: m-dark)[ $arrow.r$ ]
+#let arrow = text(size: 18pt, fill: m-accent)[ $arrow.r$ ]
 
 // Header cell for comparison boxes/tables. Uses text(weight: "bold") instead of
 // *strong* because the Metropolis theme paints strong text orange.
@@ -108,179 +108,63 @@
 ]
 
 #slide(title: "The promise of LLMs in this workflow")[
-  #set text(size: 13pt)
-  #v(-0.6em)
+  #v(1fr)
 
-  // Top Input Box: Data source
   #align(center)[
-    #block(
-      fill: m-light,
-      stroke: 1pt + m-dark.lighten(40%),
-      radius: 4pt,
-      inset: (x: 16pt, y: 6pt),
-    )[
-      #box(fill: m-dark, inset: (x: 7pt, y: 3pt), radius: 2pt)[
-        #text(fill: white, weight: "bold", size: 10pt)[INPUT]
-      ]
-      #h(8pt)
-      #text(fill: m-dark, weight: "bold", size: 12.5pt)[Raw Decompiled Pseudo-Code]
-    ]
+    #pbox[Raw Decompiled Pseudo-Code]
   ]
 
-  #v(-0.2em)
+  #v(0.3em)
   #align(center)[
-    #text(fill: m-accent, size: 15pt, weight: "bold")[#sym.arrow.b]
-    #h(8pt)
-    #text(fill: m-accent, weight: "bold", size: 12pt)[LLM AS A FORCE MULTIPLIER]
-    #h(8pt)
-    #text(fill: m-accent, size: 15pt, weight: "bold")[#sym.arrow.b]
+    #text(fill: m-dark, size: 16pt, weight: "bold")[#sym.arrow.b]
+    #h(6pt)
+    #text(fill: m-accent, weight: "bold", size: 13.5pt)[LLM as a force multiplier]
   ]
-  #v(-0.15em)
+  #v(0.3em)
 
-  // 3-Stage Iterative Workflow with connecting arrows
-  #grid(
-    columns: (1fr, auto, 1fr, auto, 1fr),
-    gutter: 7pt,
-    align: (top, horizon, top, horizon, top),
-    // Stage 1
-    block(
-      fill: m-light,
-      stroke: 1pt + m-dark.lighten(65%),
-      radius: 4pt,
-      inset: (x: 10pt, y: 9pt),
-      width: 100%,
-    )[
-      #block(
-        fill: m-dark,
-        radius: 3pt,
-        inset: (y: 4.5pt),
-        width: 100%,
-        align(center)[
-          #text(fill: m-accent, weight: "bold", size: 12pt)[1]
-          #text(fill: white.darken(10%), size: 10pt)[ #sym.circle.filled.small ]
-          #text(fill: white, weight: "bold", size: 12pt)[Explain]
-        ]
-      )
-      #v(4pt)
-      #align(center)[
-        #block(fill: m-accent.lighten(85%), inset: (x: 5pt, y: 3.5pt), radius: 3pt, width: 100%)[
-          #text(size: 9.5pt, font: "DejaVu Sans Mono")[pseudo-code #sym.arrow.r #text(weight: "bold")[plain English]]
-        ]
-      ]
-      //#v(3pt)
-      //#set text(size: 11pt)
-      //- Summarizes complex logic.
-      //- Decodes compiler idioms.
-      //- Drastically cuts triage time.
-    ],
-    // Arrow 1 -> 2
-    text(fill: m-accent, size: 18pt, weight: "bold")[#sym.arrow.r],
-    // Stage 2
-    block(
-      fill: m-light,
-      stroke: 1pt + m-dark.lighten(65%),
-      radius: 4pt,
-      inset: (x: 10pt, y: 9pt),
-      width: 100%,
-    )[
-      #block(
-        fill: m-dark,
-        radius: 3pt,
-        inset: (y: 4.5pt),
-        width: 100%,
-        align(center)[
-          #text(fill: m-accent, weight: "bold", size: 12pt)[2]
-          #text(fill: white.darken(10%), size: 10pt)[ #sym.circle.filled.small ]
-          #text(fill: white, weight: "bold", size: 12pt)[Recover Intent]
-        ]
-      )
-      #v(4pt)
-      #align(center)[
-        #block(fill: m-accent.lighten(85%), inset: (x: 5pt, y: 3.5pt), radius: 3pt, width: 100%)[
-          #text(size: 9.5pt, font: "DejaVu Sans Mono")[FUN_0040 #sym.arrow.r #text(weight: "bold")[decrypt_cfg()]]
-        ]
-      ]
-      //#v(3pt)
-      //#set text(size: 11pt)
-      //- Renames vars & functions.
-      //- Labels struct fields & types.
-      //- Rebuilds author semantics.
-    ],
-    // Arrow 2 -> 3
-    text(fill: m-accent, size: 18pt, weight: "bold")[#sym.arrow.r],
-    // Stage 3
-    block(
-      fill: m-light,
-      stroke: 1pt + m-dark.lighten(65%),
-      radius: 4pt,
-      inset: (x: 10pt, y: 9pt),
-      width: 100%,
-    )[
-      #block(
-        fill: m-dark,
-        radius: 3pt,
-        inset: (y: 4.5pt),
-        width: 100%,
-        align(center)[
-          #text(fill: m-accent, weight: "bold", size: 12pt)[3]
-          #text(fill: white.darken(10%), size: 10pt)[ #sym.circle.filled.small ]
-          #text(fill: white, weight: "bold", size: 12pt)[Hypothesize & Patch]
-        ]
-      )
-      #v(4pt)
-      #align(center)[
-        #block(fill: m-accent.lighten(85%), inset: (x: 5pt, y: 3.5pt), radius: 3pt, width: 100%)[
-          #text(size: 9.5pt, font: "DejaVu Sans Mono")[exploit bug #sym.arrow.r #text(weight: "bold")[candidate fix]]
-        ]
-      ]
-      //#v(3pt)
-      //#set text(size: 11pt)
-      //- Pinpoints vulnerable logic.
-      //- Drafts candidate C patches.
-      //- Generates IOCs & YARA rules.
-    ],
-  )
-
-  #v(-0.25em)
-  #grid(
-    columns: (1fr, auto, 1fr, auto, 1fr),
-    gutter: 7pt,
-    align: center,
-    text(fill: rgb("#2e7d32"), size: 15pt, weight: "bold")[#sym.arrow.b],
-    [],
-    text(fill: rgb("#2e7d32"), size: 15pt, weight: "bold")[#sym.arrow.b],
-    [],
-    text(fill: rgb("#2e7d32"), size: 15pt, weight: "bold")[#sym.arrow.b],
-  )
-  #v(-0.35em)
-
-  // Bottom Verification Bar: Ground Truth Guardrail
-  #block(
-    fill: rgb("#e8f5e9"),
-    stroke: 1.2pt + rgb("#2e7d32"),
+  #let stage(num, title, mapping) = block(
+    fill: m-light,
+    stroke: 0.6pt + m-gray,
     radius: 4pt,
-    inset: (x: 10pt, y: 6pt),
+    inset: (x: 8pt, y: 12pt),
     width: 100%,
-  )[
-    #grid(
-      columns: (auto, 1fr),
-      gutter: 11pt,
-      align: horizon,
-      [
-        #block(
-          fill: rgb("#2e7d32"),
-          inset: (x: 8pt, y: 4.5pt),
-          radius: 3pt,
-          text(fill: white, weight: "bold", size: 10.5pt)[Analyst in the Loop]
-        )
-      ],
-      [
-        #text(size: 11pt, fill: rgb("#1b5e20"))[
-          *Co-pilot, not autonomous replacement:* LLM outputs are hypotheses. Every finding and patch *must be verified against the binary*.
-        ]
-      ]
-    )
+    align(center)[
+      #text(fill: m-accent, weight: "bold", size: 14.5pt)[#num.]
+      #h(3pt)
+      #text(fill: m-dark, weight: "bold", size: 14.5pt)[#title]
+      #v(0.45em)
+      #text(size: 9.5pt, font: "DejaVu Sans Mono", fill: m-dark)[#mapping]
+    ],
+  )
+
+  #grid(
+    columns: (1fr, auto, 1fr, auto, 1fr),
+    gutter: 6pt,
+    align: horizon,
+    stage("1", "Explain")[pseudo-code #sym.arrow.r #text(weight: "bold")[plain English]],
+    arrow,
+    stage("2", "Recover Intent")[FUN_0040 #sym.arrow.r #text(weight: "bold")[decrypt_cfg()]],
+    arrow,
+    stage("3", "Hypothesize & Patch")[exploit bug #sym.arrow.r #text(weight: "bold")[candidate fix]],
+  )
+
+  #v(0.3em)
+  #align(center)[
+    #text(fill: m-dark, size: 16pt, weight: "bold")[#sym.arrow.b]
   ]
+  #v(0.3em)
+
+  #block(
+    fill: m-dark,
+    radius: 4pt,
+    inset: 10pt,
+    width: 100%,
+    text(fill: white, size: 14pt)[
+      *Analyst in the loop:* LLM outputs are hypotheses — every finding and patch #text(weight: "bold")[must be verified against the binary].
+    ],
+  )
+
+  #v(1fr)
 ]
 
 // ========================= 2. TOOLCHAIN =========================
@@ -323,10 +207,8 @@
   #set text(size: 17pt)
   The LLM is *wired into* the analysis tool, not used by copy-paste:
   #v(0.5em)
-  #block(width: 100%, fill: m-light, stroke: 0.6pt + m-gray, radius: 4pt, inset: 12pt)[
-    #align(center + horizon)[
-      #pbox[Binary] #arrow #pbox[Ghidra (decompiler)] #arrow #pbox[MCP bridge] #arrow #pbox[LLM] #arrow #pbox[Analyst]
-    ]
+  #align(center)[
+    #pbox[Binary] #arrow #pbox[Ghidra\ (decompiler)] #arrow #pbox(fill: m-accent)[MCP bridge] #arrow #pbox[LLM] #arrow #pbox(fill: rgb("#2e7d32"))[Analyst]
   ]
   #v(0.5em)
   - *MCP (Model Context Protocol)*: e.g. *GhidraMCP* (LaurieWired), expose Ghidra's API to an LLM agent.
@@ -343,7 +225,6 @@
 
 #slide(title: "Two lanes, same destination")[
   #set text(size: 15pt)
-<<<<<<< Updated upstream
   #grid(columns: (1fr, 1fr), gutter: 14pt,
     block(fill: m-light, inset: 10pt, radius: 4pt, width: 100%)[
       *Manual (traditional)*
@@ -494,4 +375,23 @@
 #focus-slide[
   Thank you! \
   #text(size: 20pt)[Questions?]
+]
+
+#slide(title: "Credits")[
+  #v(1fr)
+  #set text(size: 15.5pt)
+  #table(
+    columns: (1.1fr, 1.8fr),
+    align: (left + horizon, left + horizon),
+    inset: 11pt,
+    stroke: 0.5pt + m-gray,
+    table.header(hcell[Contributor], hcell[Topics]),
+    [#text(weight: "bold", fill: m-dark)[David Esperante]],
+    [1. #sections.at(0) \ 2. #sections.at(1)],
+    [#text(weight: "bold", fill: m-dark)[Héctor Aldao]],
+    [3. #sections.at(2) \ 4. #sections.at(3)],
+    [#text(weight: "bold", fill: m-dark)[Lois Briones]],
+    [5. #sections.at(4) \ 6. #sections.at(5)],
+  )
+  #v(1fr)
 ]
