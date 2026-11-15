@@ -104,6 +104,7 @@ La agenda se repite en cada cambio de sección resaltando dónde estamos (requis
 "La ingeniería inversa de malware es un cuello de botella: desensamblar, decompilar y analizar dinámicamente una muestra puede llevar *horas o días*, y depende de expertos escasos. Al mismo tiempo aparecen *cientos de miles* de muestras nuevas al día y hay un *backlog enorme de CVEs sin parchear*. Leer ensamblador o pseudocódigo ruidoso es difícil y propenso a errores. La pregunta es: ¿puede la IA generativa reducir el tiempo hasta entender y hasta parchear, sin mentirnos?"
 ]
 #profundizar[
+- *Gráfica CVEs por año*: muestra la explosión de vulnerabilidades reportadas (agravada por el uso de IA en la generación y descubrimiento de fallos), llevando el volumen de parches pendientes a niveles insostenibles para equipos humanos.
 - Volumen: AV-TEST registra del orden de *450.000+ nuevas muestras de malware/PUA al día* (ver #link("https://www.av-test.org/en/statistics/malware/")[AV-TEST malware statistics]). Usa "cientos de miles/día" para ir sobre seguro.
 - "Sin mentirnos" anticipa el hilo conductor: las alucinaciones (slide 15).
 - *Decompilación vs. desensamblado*: desensamblar = pasar bytes a instrucciones de ensamblador; decompilar = reconstruir pseudo-C de más alto nivel. El decompilador *adivina* tipos y flujo → salida aproximada, sin nombres ni comentarios originales. Esa es la entrada ruidosa que damos al LLM.
