@@ -118,8 +118,6 @@
       ]
       #h(8pt)
       #text(fill: m-dark, weight: "bold", size: 12.5pt)[Raw Decompiled Pseudo-Code]
-      #h(6pt)
-      #text(fill: m-gray.darken(10%), size: 11pt)[(Ghidra: stripped symbols, untyped memory, raw offsets)]
     ]
   ]
 
@@ -272,7 +270,7 @@
       ],
       [
         #text(size: 11pt, fill: rgb("#1b5e20"))[
-          *Co-pilot, not autonomous replacement:* LLM outputs are hypotheses. Every finding and patch *must be verified against the binary* (recompilation, dynamic execution, test suite).
+          *Co-pilot, not autonomous replacement:* LLM outputs are hypotheses. Every finding and patch *must be verified against the binary*.
         ]
       ]
     )
@@ -305,7 +303,7 @@
       - Network / behaviour capture.
     ],
     align(center + horizon)[
-      #image("img/Ghidra.png", height: 65pt)
+      #image("img/Ghidra.webp", height: 65pt)
     ],
     align(center + horizon)[
       #image("img/GDB_Archer_Fish_by_Andreas_Farnes.webp", height: 68pt)
